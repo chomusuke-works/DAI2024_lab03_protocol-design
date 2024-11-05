@@ -10,13 +10,16 @@ public class Server {
 
 	// Welcome msg
 	private static final String welcomeMsg =
-			"Welcome to this remote calculator.\n"
-			+ "The currently supported operations are\n"
-			+ "- ADD\n"
-			+ "- SUBTRACT\n"
-			+ "- MULTIPLY\n\n"
-			+ "Please use the operations with the following syntax :\n"
-			+ "OPERATION num1 num2\n";
+			"""
+					Welcome to this remote calculator.
+					The currently supported operations are
+					- ADD
+					- SUBTRACT
+					- MULTIPLY
+					
+					Please use the operations with the following syntax :
+					OPERATION num1 num2
+					""";
 
 
 	public static void main(String[] args) {
@@ -56,20 +59,18 @@ public class Server {
 					String clientResponse;
 					clientResponse = reader.readLine();  // Only one line is expected
 
-					// Process user input
+					// Process client input and send result to client
 					try {
-						int operationResult = calculateFromString(clientResponse);
-
-						// Send result
-						writer.write(Integer.toString(operationResult));
+						writer.write(Integer.toString(calculateFromString(clientResponse)));
 						writer.flush();
-
 					} catch (NumberFormatException e) {
 						System.out.println("Server received an invalid number.");  // LOG
 						writer.write("Sever received an invalid number.");  // TODO Specs
+						writer.flush();
 					} catch (IllegalStateException e) {
 						System.out.println("Server received an invalid operation.");  // LOG
 						writer.write("Server received an invalid operation.");  // TODO Specs
+						writer.flush();
 					}
 				}
 			}
