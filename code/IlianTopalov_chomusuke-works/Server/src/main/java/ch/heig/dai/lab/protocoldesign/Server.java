@@ -1,8 +1,6 @@
 package ch.heig.dai.lab.protocoldesign;
 
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
@@ -40,24 +38,63 @@ public class Server {
 							new BufferedWriter(
 									new OutputStreamWriter(
 											client.getOutputStream(),
-											StandardCharsets.UTF_8)
+											StandardCharsets.UTF_8
+									)
 							);
+					BufferedReader reader =
+							new BufferedReader(
+									new InputStreamReader(
+											client.getInputStream()
+									)
+							);
+
 					// Send welcome message
 					writer.write(welcomeMsg);
 					writer.flush();
-					System.out.println("Client disconected");  // LOG
+
+					// Wait for user input
+					String clientResponse;
+					clientResponse = reader.readLine();  // Only one line is expected
+
+					// Process user input
+					try {
+						int operationResult = calculateFromString(clientResponse);
+
+						// Send result
+						writer.write(Integer.toString(operationResult));
+						writer.flush();
+
+					} catch (NumberFormatException e) {
+						System.out.println("Server received an invalid number.");  // LOG
+						writer.write("Sever received an invalid number.");  // TODO Specs
+					} catch (IllegalStateException e) {
+						System.out.println("Server received an invalid operation.");  // LOG
+						writer.write("Server received an invalid operation.");  // TODO Specs
+					}
 				}
 			}
-
-
-		// Wait for user input
-
-		// Process user input
-
-		// Send result
-
 		} catch (IOException e) {
 			System.out.println(e.getMessage());
 		}
+	}
+
+	private static int calculateFromString(String message) {
+		String[] messageParts = message.split(" ");
+		String operation = messageParts[0].toUpperCase();
+
+		try {
+			int num1 = Integer.parseInt(messageParts[1]);
+			int num2 = Integer.parseInt(messageParts[2]);
+
+			return switch (operation) {
+				case "ADD" -> num1 + num2;
+				case "SUBTRACT" -> num1 - num2;
+				case "MULTIPLY" -> num1 * num2;
+				default -> throw new IllegalArgumentException("Unknown operation: " + operation);
+			};
+		} catch (NumberFormatException e) {
+			throw new NumberFormatException();
+		}
+
 	}
 }
