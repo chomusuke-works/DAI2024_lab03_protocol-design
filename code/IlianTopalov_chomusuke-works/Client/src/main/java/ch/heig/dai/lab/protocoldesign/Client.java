@@ -6,7 +6,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
 public class Client {
-	final String SERVER_ADDRESS = "10.193.24.163";
+	final String SERVER_ADDRESS = "localhost";
 	final int SERVER_PORT = 25565;
 
 	final String EXIT_CODE = "BYE";
