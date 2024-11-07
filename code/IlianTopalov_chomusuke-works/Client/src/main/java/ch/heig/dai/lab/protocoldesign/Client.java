@@ -4,10 +4,9 @@ import java.io.*;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
-import java.util.concurrent.TimeUnit;
 
 public class Client {
-	final String SERVER_ADDRESS = "localhost";
+	final String SERVER_ADDRESS = "10.193.24.163";
 	final int SERVER_PORT = 25565;
 
 	final String EXIT_CODE = "BYE";
@@ -30,19 +29,25 @@ public class Client {
 				StandardCharsets.UTF_8
 			));
 
+			Scanner scanner = new Scanner(System.in);
+
 			int lineCount = Integer.parseInt(is.readLine());
 
 			for (int i = 0; i < lineCount; ++i) {
 				System.out.printf("%s\n", is.readLine());
 			}
 
-			Scanner scanner = new Scanner(System.in);
-
 			String input;
 
-			while (!(input = scanner.nextLine()).equals(EXIT_CODE)) {
+			while (true) {
+				input = scanner.nextLine();
+
 				os.write(input + '\n');
 				os.flush();
+
+				if (input.equals(EXIT_CODE)) {
+					break;
+				}
 
 				System.out.println(is.readLine());
 			}
