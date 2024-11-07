@@ -39,7 +39,7 @@ public class Server {
 			// For each client
 			while (true) {
 				try (Socket client = serverSocket.accept()) {
-					System.out.println("Client connected \n");  // LOG
+					System.out.printf("%s connected \n", client.getInetAddress());  // LOG
 
 					var writer = new BufferedWriter(new OutputStreamWriter(
 						client.getOutputStream(),
