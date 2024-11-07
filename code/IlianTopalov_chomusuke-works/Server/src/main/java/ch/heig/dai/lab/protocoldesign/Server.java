@@ -12,15 +12,17 @@ public class Server {
 	static final String ERROR_NUMBER_FORMAT_CODE = "ENF";
 
 	// Welcome msg
-	private static final String welcomeMsg =
+	private static final String WELCOME_MSG =
 			"""
 			Welcome to this remote calculator.
-			The currently supported operations are
-			- ADD a b
-			- SUB a b
-			- MUL a b
-			- BYE
+			
+			These operations are supported:
+			- ADD <a> <b>	Add a and b
+			- SUB <a> <b>	Subtract b from a
+			- MUL <a> <b>	Multiply a by b
+			- BYE			Close the connection
 			""";
+	private static final int WELCOME_MSG_LINE_COUNT = 7;
 
 
 	public static void main(String[] args) {
@@ -38,17 +40,19 @@ public class Server {
 			while (true) {
 				try (Socket client = serverSocket.accept()) {
 					System.out.println("Client connected \n");  // LOG
+
 					var writer = new BufferedWriter(new OutputStreamWriter(
 						client.getOutputStream(),
 						StandardCharsets.UTF_8
 					));
+
 					BufferedReader reader = new BufferedReader(new InputStreamReader(
 						client.getInputStream(),
 						StandardCharsets.UTF_8
 					));
 
 					// Send welcome message
-					writer.write(String.format("%d\n%s", 8, welcomeMsg));
+					writer.write(String.format("%d\n%s", WELCOME_MSG_LINE_COUNT, WELCOME_MSG));
 					writer.flush();
 
 					// Wait for user input
