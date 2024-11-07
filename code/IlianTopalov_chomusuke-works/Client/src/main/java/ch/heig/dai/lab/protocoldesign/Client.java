@@ -9,7 +9,9 @@ public class Client {
 	final String SERVER_ADDRESS = "localhost";
 	final int SERVER_PORT = 25565;
 
-	final String EXIT_CODE = "BYE";
+	static final String EXIT_CODE = "BYE";
+	static final String ERROR_UNKNOWN_OPERATION_CODE = "EUO";
+	static final String ERROR_NUMBER_FORMAT_CODE = "ENF";
 
 	public static void main(String[] args) {
 		// Create a new client and run it
