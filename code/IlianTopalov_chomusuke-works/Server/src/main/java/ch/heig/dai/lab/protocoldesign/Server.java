@@ -14,15 +14,13 @@ public class Server {
 	// Welcome msg
 	private static final String welcomeMsg =
 			"""
-					Welcome to this remote calculator.
-					The currently supported operations are
-					- ADD
-					- SUB
-					- MUL
-					
-					Please use the operations with the following syntax :
-					OPERATION num1 num2
-					""";
+			Welcome to this remote calculator.
+			The currently supported operations are
+			- ADD a b
+			- SUB a b
+			- MUL a b
+			- BYE
+			""";
 
 
 	public static void main(String[] args) {
@@ -39,7 +37,7 @@ public class Server {
 			// For each client
 			while (true) {
 				try (Socket client = serverSocket.accept()) {
-					System.out.println("Client connected");  // LOG
+					System.out.println("Client connected \n");  // LOG
 					var writer = new BufferedWriter(new OutputStreamWriter(
 						client.getOutputStream(),
 						StandardCharsets.UTF_8
@@ -54,21 +52,29 @@ public class Server {
 					writer.flush();
 
 					// Wait for user input
-					String clientResponse;
-					while (!(clientResponse = reader.readLine()).equals(EXIT_CODE)) {
-						// Process client input and send result to client
-						try {
-							writer.write(Integer.toString(calculateFromString(clientResponse)) + '\n');
-							writer.flush();
-						} catch (NumberFormatException e) {
-							System.out.println("Server received an invalid number.");  // LOG
-							writer.write(ERROR_NUMBER_FORMAT_CODE + '\n');
-							writer.flush();
-						} catch (IllegalOperationException e) {
-							System.out.println("Server received an invalid operation.");  // LOG
-							writer.write(ERROR_UNKNOWN_OPERATION_CODE + '\n');
-							writer.flush();
+					String clientRequest;
+					while (true) {
+						clientRequest = reader.readLine().toUpperCase();
+						System.out.println("Client requests : " + clientRequest);  // LOG
+
+						// Process client input and send serverResponse to client
+						if (clientRequest.equals(EXIT_CODE)) {
+							System.out.println("Client disconnected \n");  // LOG
+							break;
 						}
+
+						String serverResponse;
+						try {
+							serverResponse = String.valueOf(calculateFromString(clientRequest));
+						} catch (NumberFormatException e) {
+							serverResponse = ERROR_NUMBER_FORMAT_CODE;
+						} catch (IllegalOperationException e) {
+							serverResponse = ERROR_UNKNOWN_OPERATION_CODE;
+						}
+						serverResponse += '\n';
+						System.out.println("Server responds : " + serverResponse);  // LOG
+						writer.write(serverResponse);
+						writer.flush();
 					}
 				}
 			}
@@ -79,8 +85,10 @@ public class Server {
 
 	private static int calculateFromString(String message) throws NumberFormatException, IllegalOperationException {
 		String[] messageParts = message.split(" ");
-		String operation = messageParts[0].toUpperCase();
-
+		if (messageParts.length != 3) {
+			throw new IllegalOperationException("Too many arguments");
+		}
+		String operation = messageParts[0];
 		int num1 = Integer.parseInt(messageParts[1]);
 		int num2 = Integer.parseInt(messageParts[2]);
 
