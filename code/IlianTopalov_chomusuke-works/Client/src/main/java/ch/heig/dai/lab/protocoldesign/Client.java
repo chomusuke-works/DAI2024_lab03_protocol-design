@@ -3,10 +3,9 @@ package ch.heig.dai.lab.protocoldesign;
 import java.io.*;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
-import java.util.Scanner;
 
 public class Client {
-	final String SERVER_ADDRESS = "10.193.24.163";
+	final String SERVER_ADDRESS = "localhost";
 	final int SERVER_PORT = 25565;
 
 	public static void main(String[] args) {
@@ -32,6 +31,9 @@ public class Client {
 			while ((serverResponse = is.readLine()) != null) {
 				System.out.println(serverResponse);
 			}
+
+			is.close();
+			os.close();
 		} catch (IOException e) {
 			System.err.println("Exception was handled");
 			System.err.println(e.getMessage());
