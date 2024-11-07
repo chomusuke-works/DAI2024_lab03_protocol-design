@@ -7,6 +7,9 @@ import java.nio.charset.StandardCharsets;
 
 public class Server {
 	final int SERVER_PORT = 1234;
+	static final String EXIT_CODE = "BYE";
+	static final String ERROR_UNKNOWN_OPERATION_CODE = "EUO";
+	static final String ERROR_NUMBER_FORMAT_CODE = "ENF";
 
 	// Welcome msg
 	private static final String welcomeMsg =
@@ -14,8 +17,8 @@ public class Server {
 					Welcome to this remote calculator.
 					The currently supported operations are
 					- ADD
-					- SUBTRACT
-					- MULTIPLY
+					- SUB
+					- MUL
 					
 					Please use the operations with the following syntax :
 					OPERATION num1 num2
@@ -82,15 +85,17 @@ public class Server {
 			int num1 = Integer.parseInt(messageParts[1]);
 			int num2 = Integer.parseInt(messageParts[2]);
 
-			return switch (operation) {
-				case "ADD" -> num1 + num2;
-				case "SUBTRACT" -> num1 - num2;
-				case "MULTIPLY" -> num1 * num2;
-				default -> throw new IllegalArgumentException("Unknown operation: " + operation);
-			};
-		} catch (NumberFormatException e) {
-			throw new NumberFormatException();
-		}
+		return switch (operation) {
+			case "ADD" -> num1 + num2;
+			case "SUB" -> num1 - num2;
+			case "MUL" -> num1 * num2;
+			default -> throw new IllegalOperationException("Unknown operation: " + operation);
+		};
+	}
 
+	private static class IllegalOperationException extends IllegalArgumentException {
+		public IllegalOperationException(String message) {
+			super(message);
+		}
 	}
 }
