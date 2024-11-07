@@ -6,7 +6,7 @@ import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 
 public class Server {
-	final int SERVER_PORT = 1234;
+	final int SERVER_PORT = 25565;
 	static final String EXIT_CODE = "BYE";
 	static final String ERROR_UNKNOWN_OPERATION_CODE = "EUO";
 	static final String ERROR_NUMBER_FORMAT_CODE = "ENF";
@@ -33,8 +33,8 @@ public class Server {
 
 	private void run() {
 		// Create socket
-		try (ServerSocket serverSocket = new ServerSocket(25565)) {  // TODO Replace 25565
-			System.out.println("Server is listening on port " + 25565);
+		try (ServerSocket serverSocket = new ServerSocket(SERVER_PORT)) {
+			System.out.println("Server is listening on port " + SERVER_PORT);
 
 			// For each client
 			while (true) {
@@ -50,25 +50,25 @@ public class Server {
 					));
 
 					// Send welcome message
-					writer.write(welcomeMsg);
+					writer.write(String.format("%d\n%s", 8, welcomeMsg));
 					writer.flush();
 
 					// Wait for user input
 					String clientResponse;
-					clientResponse = reader.readLine();  // Only one line is expected
-
-					// Process client input and send result to client
-					try {
-						writer.write(Integer.toString(calculateFromString(clientResponse)));
-						writer.flush();
-					} catch (NumberFormatException e) {
-						System.out.println("Server received an invalid number.");  // LOG
-						writer.write("Sever received an invalid number.");  // TODO Specs
-						writer.flush();
-					} catch (IllegalStateException e) {
-						System.out.println("Server received an invalid operation.");  // LOG
-						writer.write("Server received an invalid operation.");  // TODO Specs
-						writer.flush();
+					while (!(clientResponse = reader.readLine()).equals(EXIT_CODE)) {
+						// Process client input and send result to client
+						try {
+							writer.write(Integer.toString(calculateFromString(clientResponse)) + '\n');
+							writer.flush();
+						} catch (NumberFormatException e) {
+							System.out.println("Server received an invalid number.");  // LOG
+							writer.write(ERROR_NUMBER_FORMAT_CODE + '\n');
+							writer.flush();
+						} catch (IllegalOperationException e) {
+							System.out.println("Server received an invalid operation.");  // LOG
+							writer.write(ERROR_UNKNOWN_OPERATION_CODE + '\n');
+							writer.flush();
+						}
 					}
 				}
 			}
@@ -77,13 +77,12 @@ public class Server {
 		}
 	}
 
-	private static int calculateFromString(String message) {
+	private static int calculateFromString(String message) throws NumberFormatException, IllegalOperationException {
 		String[] messageParts = message.split(" ");
 		String operation = messageParts[0].toUpperCase();
 
-		try {
-			int num1 = Integer.parseInt(messageParts[1]);
-			int num2 = Integer.parseInt(messageParts[2]);
+		int num1 = Integer.parseInt(messageParts[1]);
+		int num2 = Integer.parseInt(messageParts[2]);
 
 		return switch (operation) {
 			case "ADD" -> num1 + num2;
