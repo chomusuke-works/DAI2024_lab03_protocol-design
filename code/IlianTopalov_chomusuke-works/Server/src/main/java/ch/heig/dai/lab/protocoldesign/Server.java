@@ -37,19 +37,14 @@ public class Server {
 			while (true) {
 				try (Socket client = serverSocket.accept()) {
 					System.out.println("Client connected");  // LOG
-					var writer =
-							new BufferedWriter(
-									new OutputStreamWriter(
-											client.getOutputStream(),
-											StandardCharsets.UTF_8
-									)
-							);
-					BufferedReader reader =
-							new BufferedReader(
-									new InputStreamReader(
-											client.getInputStream()
-									)
-							);
+					var writer = new BufferedWriter(new OutputStreamWriter(
+						client.getOutputStream(),
+						StandardCharsets.UTF_8
+					));
+					BufferedReader reader = new BufferedReader(new InputStreamReader(
+						client.getInputStream(),
+						StandardCharsets.UTF_8
+					));
 
 					// Send welcome message
 					writer.write(welcomeMsg);
