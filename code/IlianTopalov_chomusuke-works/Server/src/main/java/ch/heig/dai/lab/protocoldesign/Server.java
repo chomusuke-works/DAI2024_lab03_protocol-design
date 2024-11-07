@@ -52,14 +52,14 @@ public class Server {
 					));
 
 					// Send welcome message
-					writer.write(String.format("%d\n%s", WELCOME_MSG_LINE_COUNT, WELCOME_MSG));
+					writer.write(String.format("%d\n%s\n", WELCOME_MSG_LINE_COUNT, WELCOME_MSG));
 					writer.flush();
 
 					// Wait for user input
 					String clientRequest;
 					while (true) {
 						clientRequest = reader.readLine().toUpperCase();
-						System.out.println("Client requests : " + clientRequest);  // LOG
+						System.out.println("C > " + clientRequest);  // LOG
 
 						// Process client input and send serverResponse to client
 						if (clientRequest.equals(EXIT_CODE)) {
@@ -75,9 +75,9 @@ public class Server {
 						} catch (IllegalOperationException e) {
 							serverResponse = ERROR_UNKNOWN_OPERATION_CODE;
 						}
-						serverResponse += '\n';
-						System.out.println("Server responds : " + serverResponse);  // LOG
-						writer.write(serverResponse);
+						System.out.println("S > " + serverResponse);  // LOG
+
+						writer.write(serverResponse + '\n');
 						writer.flush();
 					}
 				}
