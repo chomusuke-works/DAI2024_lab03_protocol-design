@@ -17,10 +17,10 @@ public class Server {
 			Welcome to this remote calculator.
 			
 			These operations are supported:
-			- ADD <a> <b>	Add a and b
-			- SUB <a> <b>	Subtract b from a
-			- MUL <a> <b>	Multiply a by b
-			- BYE			Close the connection
+			- ADD <a> <b>    Add a and b
+			- SUB <a> <b>    Subtract b from a
+			- MUL <a> <b>    Multiply a by b
+			- BYE            Close the connection
 			""";
 	private static final int WELCOME_MSG_LINE_COUNT = 7;
 
@@ -39,7 +39,7 @@ public class Server {
 			// For each client
 			while (true) {
 				try (Socket client = serverSocket.accept()) {
-					System.out.printf("%s connected \n", client.getInetAddress());  // LOG
+					System.out.printf("%s connected \n", client.getInetAddress().getHostAddress());  // LOG
 
 					var writer = new BufferedWriter(new OutputStreamWriter(
 						client.getOutputStream(),
