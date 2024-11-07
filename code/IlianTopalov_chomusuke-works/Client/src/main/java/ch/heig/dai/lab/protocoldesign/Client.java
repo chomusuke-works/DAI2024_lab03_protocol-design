@@ -45,11 +45,11 @@ public class Client {
 				os.write(input + '\n');
 				os.flush();
 
-				if (input.equals(EXIT_CODE)) {
+				if (input.equalsIgnoreCase(EXIT_CODE)) {
 					break;
 				}
 
-				System.out.println(is.readLine());
+				System.out.println(is.readLine() + '\n');
 			}
 
 			is.close();
