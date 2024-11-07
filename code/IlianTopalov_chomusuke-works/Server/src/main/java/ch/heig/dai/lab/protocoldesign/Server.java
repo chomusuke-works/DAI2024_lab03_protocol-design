@@ -52,7 +52,7 @@ public class Server {
 					));
 
 					// Send welcome message
-					writer.write(String.format("%d\n%s\n", WELCOME_MSG_LINE_COUNT, WELCOME_MSG));
+					writer.write(String.format("%d\n%s", WELCOME_MSG_LINE_COUNT, WELCOME_MSG));
 					writer.flush();
 
 					// Wait for user input
