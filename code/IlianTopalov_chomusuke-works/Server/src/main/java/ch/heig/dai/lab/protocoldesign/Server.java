@@ -58,7 +58,9 @@ public class Server {
 					// Wait for user input
 					String clientRequest;
 					while (true) {
-						clientRequest = reader.readLine().toUpperCase();
+						if ((clientRequest = reader.readLine()) == null) break;
+						clientRequest = clientRequest.toUpperCase();
+
 						System.out.println("C > " + clientRequest);  // LOG
 
 						// Process client input and send serverResponse to client
@@ -80,6 +82,8 @@ public class Server {
 						writer.write(serverResponse + '\n');
 						writer.flush();
 					}
+
+					System.out.println("Client disconnected.");  // LOG
 				}
 			}
 		} catch (IOException e) {
