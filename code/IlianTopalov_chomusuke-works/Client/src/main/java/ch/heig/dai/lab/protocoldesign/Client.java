@@ -51,7 +51,14 @@ public class Client {
 					break;
 				}
 
-				System.out.println(is.readLine() + '\n');
+				String serverResponse = is.readLine();
+				if (serverResponse.equals(ERROR_UNKNOWN_OPERATION_CODE)) {
+					System.err.println("The operation code is unknown.\n");
+				} else if (serverResponse.equals(ERROR_NUMBER_FORMAT_CODE)) {
+					System.err.println("The number format is incorrect.\n");
+				} else {
+					System.out.println(serverResponse + '\n');
+				}
 			}
 
 			is.close();
