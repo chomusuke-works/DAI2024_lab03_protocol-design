@@ -1,19 +1,23 @@
+# Connection establishment
+Following the establishment of the TCP connection, a welcome message is sent by the server.
+It is always preceded by a 32-bit integer representing the number of lines in the message.
+
 # Supported operations
+
+The server responds to the client's queries by simply sending the result of the computation requested,
+or an error code if the prompt syntax is incorrect.
 
 ## Addition
 `ADD <A> <B>`
 
-Adds A to B
-
 ## Subtraction
 `SUB <A> <B>` 
-
-Subtracts A from B
 
 ## Multiplication
 `MUL <A> <B>`
 
-Multiplies A by B
+## Closing the connection
+`BYE`
 
 # Error codes
 `EUO` = `Error: Unknown Operation` The given operation code is unknown
